@@ -1,6 +1,7 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   Form,
@@ -25,7 +26,7 @@ interface BookingFormData {
 
 interface BookingFormProps {
   availableTimes: string[];
-  submitForm: (data: BookingFormData) => void;
+  onSubmit: SubmitHandler<BookingFormData>;
 }
 
 const formSchema = z.object({
@@ -38,14 +39,13 @@ const formSchema = z.object({
   occasion: z.string(),
 });
 
-// BookingForm component
 export default function BookingForm({
   availableTimes = [],
-  submitForm,
+  onSubmit,
 }: BookingFormProps) {
   const {
-    control,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<BookingFormData>({
     resolver: zodResolver(formSchema),
@@ -60,11 +60,6 @@ export default function BookingForm({
     },
   });
 
-  const onSubmit: SubmitHandler<BookingFormData> = (data) => {
-    submitForm(data);
-  };
-
-  // Ensure availableTimes is defined before calling map
   const options = availableTimes.map((time) => (
     <option key={time} value={time}>
       {time}
@@ -77,152 +72,137 @@ export default function BookingForm({
         Please fill in the form below accurately to enable us to serve you
         nicely.
       </p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="first-name" className="text-sm font-medium">
-                  First Name
-                </FormLabel>
-                <Input
-                  {...field}
-                  id="first-name"
-                  placeholder="Enter First Name"
-                  className="border border-gray-300 rounded px-3 py-2"
-                />
-                {errors.firstName && (
-                  <FormMessage className="text-red-500 text-xs">
-                    {errors.firstName.message}
-                  </FormMessage>
-                )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="last-name" className="text-sm font-medium">
-                  Last Name
-                </FormLabel>
-                <Input
-                  {...field}
-                  id="last-name"
-                  placeholder="Enter Last Name"
-                  className="border border-gray-300 rounded px-3 py-2"
-                />
-                {errors.lastName && (
-                  <FormMessage className="text-red-500 text-xs">
-                    {errors.lastName.message}
-                  </FormMessage>
-                )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="time"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="time" className="text-sm font-medium">
-                  Time
-                </FormLabel>
-                <Select {...field} id="time" defaultValue="00:00">
-                  {options}
-                </Select>
-                {errors.time && (
-                  <FormMessage className="text-red-500 text-xs">
-                    {errors.time.message}
-                  </FormMessage>
-                )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="noOfGuests"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="noOfGuests" className="text-sm font-medium">
-                  Number of Guests
-                </FormLabel>
-                <Input
-                  {...field}
-                  id="noOfGuests"
-                  type="number"
-                  min="1"
-                  max="10"
-                  placeholder="Enter Number of Guests"
-                  className="border border-gray-300 rounded px-3 py-2"
-                />
-                {errors.noOfGuests && (
-                  <FormMessage className="text-red-500 text-xs">
-                    {errors.noOfGuests.message}
-                  </FormMessage>
-                )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="occasion"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="occasion" className="text-sm font-medium">
-                  Occasion
-                </FormLabel>
-                <Input
-                  {...field}
-                  id="occasion"
-                  placeholder="Enter Occasion"
-                  className="border border-gray-300 rounded px-3 py-2"
-                />
-                {errors.occasion && (
-                  <FormMessage className="text-red-500 text-xs">
-                    {errors.occasion.message}
-                  </FormMessage>
-                )}
-              </FormItem>
-            )}
-          />
-        </div>
-        <Button
-          type="submit"
-          className="bg-[#F4CE14] hover:bg-[#ffe047e1] text-black font-bold py-2 px-4 rounded"
-        >
-          Reserve
-        </Button>
-      </form>
+      <Form {...Form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    htmlFor="first-name"
+                    className="text-sm font-medium"
+                  >
+                    First Name
+                  </FormLabel>
+                  <Input
+                    {...field}
+                    id="first-name"
+                    placeholder="Enter First Name"
+                    className="border border-gray-300 rounded px-3 py-2"
+                  />
+                  {errors.firstName && (
+                    <FormMessage className="text-red-500 text-xs">
+                      {errors.firstName.message}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    htmlFor="last-name"
+                    className="text-sm font-medium"
+                  >
+                    Last Name
+                  </FormLabel>
+                  <Input
+                    {...field}
+                    id="last-name"
+                    placeholder="Enter Last Name"
+                    className="border border-gray-300 rounded px-3 py-2"
+                  />
+                  {errors.lastName && (
+                    <FormMessage className="text-red-500 text-xs">
+                      {errors.lastName.message}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="time" className="text-sm font-medium">
+                    Time
+                  </FormLabel>
+                  <Select {...field} defaultValue="00:00">
+                    {options}
+                  </Select>
+                  {errors.time && (
+                    <FormMessage className="text-red-500 text-xs">
+                      {errors.time.message}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="noOfGuests"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    htmlFor="noOfGuests"
+                    className="text-sm font-medium"
+                  >
+                    Number of Guests
+                  </FormLabel>
+                  <Input
+                    {...field}
+                    id="noOfGuests"
+                    type="number"
+                    min="1"
+                    max="10"
+                    placeholder="Enter Number of Guests"
+                    className="border border-gray-300 rounded px-3 py-2"
+                  />
+                  {errors.noOfGuests && (
+                    <FormMessage className="text-red-500 text-xs">
+                      {errors.noOfGuests.message}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="occasion"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="occasion" className="text-sm font-medium">
+                    Occasion
+                  </FormLabel>
+                  <Input
+                    {...field}
+                    id="occasion"
+                    placeholder="Enter Occasion"
+                    className="border border-gray-300 rounded px-3 py-2"
+                  />
+                  {errors.occasion && (
+                    <FormMessage className="text-red-500 text-xs">
+                      {errors.occasion.message}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button
+            type="submit"
+            className="bg-[#F4CE14] hover:bg-[#ffe047e1] text-black font-bold py-2 px-4 rounded"
+          >
+            Reserve
+          </Button>
+        </form>
+      </Form>
     </main>
   );
-}
-
-function zodResolver<T extends z.ZodRawShape>(
-  schema: z.ZodObject<T>
-): SubmitHandler<T> {
-  return async (data, context) => {
-    try {
-      const validatedData = await schema.parseAsync(data);
-      return {
-        values: validatedData,
-        errors: {},
-      };
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        // Type guard for ZodError
-        return {
-          values: {},
-          errors: error.formErrors.fieldErrors,
-        };
-      } else {
-        // Handle unexpected error types
-        console.error("Unexpected error during validation:", error);
-        throw new Error("Validation failed with unknown error");
-      }
-    }
-  };
 }
