@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -39,6 +39,14 @@ const formSchema = z.object({
   occasion: z.string(),
 });
 
+// Define useFormField function
+const useFormField = (fieldName: keyof BookingFormData) => {
+  const { getFieldState } = useFormContext();
+  const fieldState = getFieldState(fieldName);
+
+  return fieldState;
+};
+
 export default function BookingForm({
   availableTimes = [],
   onSubmit,
@@ -72,136 +80,125 @@ export default function BookingForm({
         Please fill in the form below accurately to enable us to serve you
         nicely.
       </p>
-      <Form {...Form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    htmlFor="first-name"
-                    className="text-sm font-medium"
-                  >
-                    First Name
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="first-name"
-                    placeholder="Enter First Name"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                  {errors.firstName && (
-                    <FormMessage className="text-red-500 text-xs">
-                      {errors.firstName.message}
-                    </FormMessage>
-                  )}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    htmlFor="last-name"
-                    className="text-sm font-medium"
-                  >
-                    Last Name
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="last-name"
-                    placeholder="Enter Last Name"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                  {errors.lastName && (
-                    <FormMessage className="text-red-500 text-xs">
-                      {errors.lastName.message}
-                    </FormMessage>
-                  )}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="time"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="time" className="text-sm font-medium">
-                    Time
-                  </FormLabel>
-                  <Select {...field} defaultValue="00:00">
-                    {options}
-                  </Select>
-                  {errors.time && (
-                    <FormMessage className="text-red-500 text-xs">
-                      {errors.time.message}
-                    </FormMessage>
-                  )}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="noOfGuests"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    htmlFor="noOfGuests"
-                    className="text-sm font-medium"
-                  >
-                    Number of Guests
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="noOfGuests"
-                    type="number"
-                    min="1"
-                    max="10"
-                    placeholder="Enter Number of Guests"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                  {errors.noOfGuests && (
-                    <FormMessage className="text-red-500 text-xs">
-                      {errors.noOfGuests.message}
-                    </FormMessage>
-                  )}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="occasion"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="occasion" className="text-sm font-medium">
-                    Occasion
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="occasion"
-                    placeholder="Enter Occasion"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                  {errors.occasion && (
-                    <FormMessage className="text-red-500 text-xs">
-                      {errors.occasion.message}
-                    </FormMessage>
-                  )}
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button
-            type="submit"
-            className="bg-[#F4CE14] hover:bg-[#ffe047e1] text-black font-bold py-2 px-4 rounded"
-          >
-            Reserve
-          </Button>
-        </form>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="first-name" className="text-sm font-medium">
+                  First Name
+                </FormLabel>
+                <Input
+                  {...field}
+                  id="first-name"
+                  placeholder="Enter First Name"
+                  className="border border-gray-300 rounded px-3 py-2"
+                />
+                {errors.firstName && (
+                  <FormMessage className="text-red-500 text-xs">
+                    {errors.firstName.message}
+                  </FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="last-name" className="text-sm font-medium">
+                  Last Name
+                </FormLabel>
+                <Input
+                  {...field}
+                  id="last-name"
+                  placeholder="Enter Last Name"
+                  className="border border-gray-300 rounded px-3 py-2"
+                />
+                {errors.lastName && (
+                  <FormMessage className="text-red-500 text-xs">
+                    {errors.lastName.message}
+                  </FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="time"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="time" className="text-sm font-medium">
+                  Time
+                </FormLabel>
+                <Select {...field} defaultValue="00:00">
+                  {options}
+                </Select>
+                {errors.time && (
+                  <FormMessage className="text-red-500 text-xs">
+                    {errors.time.message}
+                  </FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="noOfGuests"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="noOfGuests" className="text-sm font-medium">
+                  Number of Guests
+                </FormLabel>
+                <Input
+                  {...field}
+                  id="noOfGuests"
+                  type="number"
+                  min="1"
+                  max="10"
+                  placeholder="Enter Number of Guests"
+                  className="border border-gray-300 rounded px-3 py-2"
+                />
+                {errors.noOfGuests && (
+                  <FormMessage className="text-red-500 text-xs">
+                    {errors.noOfGuests.message}
+                  </FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="occasion"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="occasion" className="text-sm font-medium">
+                  Occasion
+                </FormLabel>
+                <Input
+                  {...field}
+                  id="occasion"
+                  placeholder="Enter Occasion"
+                  className="border border-gray-300 rounded px-3 py-2"
+                />
+                {errors.occasion && (
+                  <FormMessage className="text-red-500 text-xs">
+                    {errors.occasion.message}
+                  </FormMessage>
+                )}
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button
+          type="submit"
+          className="bg-[#F4CE14] hover:bg-[#ffe047e1] text-black font-bold py-2 px-4 rounded"
+        >
+          Reserve
+        </Button>
       </Form>
     </main>
   );
